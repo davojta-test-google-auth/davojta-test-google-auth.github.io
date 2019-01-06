@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Iframe</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <p>Hello world!</p>
+    <div>
+      <iframe
+        id="inlineFrame"
+        title="Inline Frame Example"
+        width="300"
+        height="200"
+        src="http://127.0.0.1:8080" >
+      </iframe>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      window.jQuery ||
+        document.write(
+          '<script src="js/vendor/jquery-3.3.1.min.js"><\/script>'
+        );
+    </script>
+    <script>
+      const iframe = document.querySelector("#inlineFrame");
+
+        window.getAccessToken = () => {
+            iframe.contentWindow.postMessage("getAccessToken", "*");
+        };
+
+
+      setTimeout(() => {
+        console.log("post test message to iframe");
+
+        iframe.contentWindow.postMessage("test_message", "*");
+      }, 5000);
+
+      function receiveMessage(event) {
+        // Do we trust the sender of this message?  (might be
+        // different from what we originally opened, for example).
+        if (
+          event.origin !== "https://davojta-test-google-auth.github.io/" &&
+          event.origin !== "http://127.0.0.1:8080"
+        )
+          return;
+
+        console.log("parent html: ", event);
+        // event.source is popup
+        // event.data is "hi there yourself!  the secret response is: rheeeeet!"
+      }
+      window.addEventListener("message", receiveMessage, false);
+    </script>
+  </body>
+</html>
