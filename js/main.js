@@ -7,7 +7,8 @@ function receiveMessage(event) {
 
   if (
     event.origin !== "https://davojta-test-google-auth.github.io" &&
-    event.origin !== "http://127.0.0.1:8080"
+    event.origin !== "http://127.0.0.1:8080" &&
+    event.origin !== 'chrome-extension://fliamllfljamnbcapfbmcgddafjjjaid'
   )
     return;
 
