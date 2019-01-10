@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    <!--[if lte IE 9]>
+      <p class="browserupgrade">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="https://browsehappy.com/">upgrade your browser</a> to improve
+        your experience and security.
+      </p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <p>Hello world! This is HTML5 Boilerplate.</p>
+    <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      window.jQuery ||
+        document.write(
+          '<script src="js/vendor/jquery-3.3.1.min.js"><\/script>'
+        );
+    </script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+      var GoogleAuth;
+      var SCOPE = "https://www.googleapis.com/auth/gmail.modify email profile";
+      function handleClientLoad() {
+        // Load the API's client and auth2 modules.
+        // Call the initClient function after the modules load.
+        gapi.load("client:auth2", initClient);
+      }
+
+      function initClient() {
+        // Retrieve the discovery document for version 3 of Google Drive API.
+        // In practice, your app can retrieve one or more discovery documents.
+        var discoveryUrl =
+          "https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest";
+
+        // Initialize the gapi.client object, which app uses to make API requests.
+        // Get API key and client ID from API Console.
+        // 'scope' field specifies space-delimited list of access scopes.
+        var SCOPE = 'https://www.googleapis.com/auth/gmail.modify email profile';
+        gapi.auth2.authorize(
+          {
+            client_id:
+              "928761302411-l8mr654u1f0paib01avue4ffbf8ct8pn.apps.googleusercontent.com",
+            scope: SCOPE,
+            response_type: "id_token permission",
+            //userId: 'dzianis.sheka@gmail.com',
+            userId: "105045038631966744315"
+          },
+          function(response) {
+            if (response.error) {
+              // An error happened!
+              return;
+            }
+            // The user authorized the application for the scopes requested.
+            var accessToken = response.access_token;
+            var idToken = response.id_token;
+            console.log('accessToken + idToken', response.access_token, response.id_token);
+            
+            // You can also now use gapi.client to perform authenticated requests.
+            setTimeout(() => {
+              var GoogleAuth = gapi.auth2.getAuthInstance();
+              console.log('GoogleAuth', GoogleAuth);
+              
+            })
+          }
+        );
+
+        // gapi.client
+        //   .init({
+        //     //   'apiKey': 'YOUR_API_KEY',
+        //     discoveryDocs: [discoveryUrl],
+        //     clientId:
+        //       "928761302411-l8mr654u1f0paib01avue4ffbf8ct8pn.apps.googleusercontent.com",
+        //     scope: SCOPE
+        //   })
+        //   .then(function() {
+        //     GoogleAuth = gapi.auth2.getAuthInstance();
+
+        //     // Listen for sign-in state changes.
+        //     GoogleAuth.isSignedIn.listen(updateSigninStatus);
+
+        //     // Handle initial sign-in state. (Determine if user is already signed in.)
+        //     var user = GoogleAuth.currentUser.get();
+        //     setSigninStatus();
+
+        //     // Call handleAuthClick function when user clicks on
+        //     //      "Sign In/Authorize" button.
+        //     $("#sign-in-or-out-button").click(function() {
+        //       handleAuthClick();
+        //     });
+        //     $("#revoke-access-button").click(function() {
+        //       revokeAccess();
+        //     });
+        //   });
+      }
+
+      function handleAuthClick() {
+        if (GoogleAuth.isSignedIn.get()) {
+          // User is authorized and has clicked 'Sign out' button.
+          GoogleAuth.signOut();
+        } else {
+          // User is not signed in. Start Google auth flow.
+          GoogleAuth.signIn();
+        }
+      }
+
+      function revokeAccess() {
+        GoogleAuth.disconnect();
+      }
+
+      function setSigninStatus(isSignedIn) {
+        var user = GoogleAuth.currentUser.get();
+        var isAuthorized = user.hasGrantedScopes(SCOPE);
+        if (isAuthorized) {
+          $("#sign-in-or-out-button").html("Sign out");
+          $("#revoke-access-button").css("display", "inline-block");
+          $("#auth-status").html(
+            "You are currently signed in and have granted " +
+              "access to this app."
+          );
+        } else {
+          $("#sign-in-or-out-button").html("Sign In/Authorize");
+          $("#revoke-access-button").css("display", "none");
+          $("#auth-status").html(
+            "You have not authorized this app or you are " + "signed out."
+          );
+        }
+      }
+
+      function updateSigninStatus(isSignedIn) {
+        setSigninStatus();
+      }
+    </script>
+
+    <button id="sign-in-or-out-button" style="margin-left: 25px">
+      Sign In/Authorize
+    </button>
+    <button id="revoke-access-button" style="display: none; margin-left: 25px">
+      Revoke access
+    </button>
+
+    <div id="auth-status" style="display: inline; padding-left: 25px"></div>
+    <hr />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()"
+    ></script>
+
+    <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+    <script>
+      window.ga = function() {
+        ga.q.push(arguments);
+      };
+      ga.q = [];
+      ga.l = +new Date();
+      ga("create", "UA-XXXXX-Y", "auto");
+      ga("send", "pageview");
+    </script>
+    <script
+      src="https://www.google-analytics.com/analytics.js"
+      async
+      defer
+    ></script>
+  </body>
+</html>
