@@ -29,7 +29,7 @@ function receiveMessage(event) {
     );
   }
 
-  event.source.postMessage("answer_from_iframe", event.origin);
+  // event.source.postMessage("answer_from_iframe", event.origin);
 
   // ...
 }
